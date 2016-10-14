@@ -1,8 +1,11 @@
 # coding: utf8
 import copy
 import random
-
+import time
 # ------------------------------------------------------------------
+
+
+
 def showBoard(T):
 	counter=0
 	for x in T:
@@ -47,24 +50,23 @@ def applyAction(T,a,jog):
 # noinspection PyRedundantParentheses
 def utility(T):
     boardsize = 15
-    bs = boardsize - 1
     countX = 0
     countO = 0
+    rightFrame  =   [x for x in range(14,225,15)]
+    leftFrame   =   [x for x in range(0,210,15)]
 #------------------Test for line-----------------
-
-    '''for x in range(len(T)):
+    x=0
+    while(x < len(T)):
         #looking for X terminal state
         while(T[x] == 1):
             countX += 1
-            if (x % bs == 0):
-                countX = 0
+            if (x in rightFrame):
                 break
             x += 1
         # looking for O terminal state
         while (T[x] == -1):
             countO += 1
-            if (x % bs == 0):
-                countO = 0
+            if (x in rightFrame):
                 break
             x += 1
         if(countO == 5):
@@ -72,23 +74,25 @@ def utility(T):
         elif(countX==5):
             return 1
 
-        countX = countO = 0'''
+        countX = countO = 0
 
+        x += 1
 #----------------Test for column------------
-    for i in range(15):
-        for x in range(i,len(T),15):
+    for i in range(boardsize):
+        x = i
+        while(x < len(T)):
             while (T[x] == 1):
                 countX += 1
-                '''if (x % bs == 0):
+                if (x >= len(T)-15):
                     countX = 0
-                    break'''
+                    break
                 x += 15
                 # looking for O terminal state
             while (T[x] == -1):
                 countO += 1
-                '''if (x % bs == 0):
+                if (x >= len(T)-15):
                     countO = 0
-                    break'''
+                    break
                 x += 15
             if (countO == 5):
                 return -1
@@ -96,6 +100,96 @@ def utility(T):
                 return 1
 
             countX = countO = 0
+
+            x += 15
+
+#------------- Test for diagonal terminal state ------
+    for x in range(4, boardsize):
+        while(x not in rightFrame):
+            #T[x]=-1
+            #showBoard(T)
+            #time.sleep(0.5)
+            #T[x]=0
+            while(T[x] == 1):
+                countX += 1
+                if(x in leftFrame):
+                    break
+                x += 14
+            while (T[x] == -1):
+                countO += 1
+                if (x in leftFrame):
+                    break
+                x += 14
+
+
+            if (countO == 5):
+                return -1
+            elif (countX == 5):
+                return 1
+
+            countX = countO = 0
+            x += 14
+    for x in range(210,221):
+        while(x not in leftFrame):
+            while (T[x] == 1):
+                countX += 1
+                if (x in rightFrame):
+                    break
+                x -= 14
+            while (T[x] == -1):
+                countO += 1
+                if (x in rightFrame):
+                    break
+                x -= 14
+            if (countO == 5):
+                return -1
+            elif (countX == 5):
+                return 1
+
+            countX = countO = 0
+            x-=14
+
+    rightFrameSpecial= [x +16 for x in rightFrame]
+    for x in range(0,12):
+        while(x not in rightFrameSpecial):
+            while (T[x] == 1):
+                countX += 1
+                if (x in rightFrame):
+                    break
+                x += 16
+            while (T[x] == -1):
+                countO += 1
+                if (x in rightFrame):
+                    break
+                x += 16
+            if (countO == 5):
+                return -1
+            elif (countX == 5):
+                return 1
+
+            countX = countO = 0
+            x+=16
+    leftFrameSpecial=[x - 16 for x in leftFrame]
+    for x in range(214,224):
+        while(x not in leftFrameSpecial):
+            while (T[x] == 1):
+                countX += 1
+                if (x in leftFrame):
+                    break
+                x -= 16
+            while (T[x] == -1):
+                countO += 1
+                if (x in leftFrame):
+                    break
+                x -= 16
+            if (countO == 5):
+                return -1
+            elif (countX == 5):
+                return 1
+
+            countX = countO = 0
+            x -= 16
+
 
     return 0
 
@@ -169,6 +263,7 @@ def Game(p1,p2):
     # we could have started from a latter state e.g.
     #T = [1,-1,0,0,-1,0,1,0,0]
     showBoard(T)
+    print("e")
     while allowableActions(T) != [] and not isTerminal(T):
 	    T=p1(T)
 	    showBoard(T)
@@ -212,28 +307,5 @@ def human_player(T):
 # max always wins? :
 #Game(maxPlays,randomPlayer)
 # that's a draw:
-#Game(maxPlays,minPlays)
-s = 15  # s=int(input("Type size:"))
-n = s ** 2
-T = [0] * n
-for x in range(4,8):
-    T[x]=1
-for x in range(128,len(T)-15,15):
-    T[x]=-1
-showBoard(T)
+Game(maxPlays,minPlays)
 
-print(utility(T))
-
-for x in range(15):
-    T[x]=[0]*15
-print (T)
-
-for x in range(15):
-    for i in T[x]:
-        if (i == 0):
-            print(".", end="\t")
-        elif (i == 1):
-            print("X", end="\t")
-        else:
-            print("O", end="\t")
-    print("\n")
