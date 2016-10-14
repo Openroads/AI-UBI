@@ -4,20 +4,16 @@ import random
 
 # ------------------------------------------------------------------
 def showBoard(T):
-	counter=0
-	for x in T:
-		if(counter %15 ==0):
-			print("\n")
 
-		counter +=1
-
-		if(x == 0):
-			print(".",end="\t")
-		elif(x == 1):
-			print("X",end="\t")
-		else:
-			print("O",end="\t")
-	print("\n")
+    for x in range(len(T)):
+        for i in T[x]:
+            if (i == 0):
+                print(".", end="\t")
+            elif (i == 1):
+                print("X", end="\t")
+            else:
+                print("O", end="\t")
+        print("\n")
 
 # ------------------------------------------------------------------
 # given a state, returns the list of allowable actions
@@ -161,15 +157,14 @@ def minPlays(T):
 # ------------------------------------------------------------------
 def Game(p1,p2):
     # empty board
-    print("Chose size of board")
-    s=15 #s=int(input("Type size:"))
-    n=s**2
-    T=[0]*n
-    #T = [0,0,0,0,0,0,0,0,0]
-    # we could have started from a latter state e.g.
-    #T = [1,-1,0,0,-1,0,1,0,0]
+    print("Chose size of board:")
+    s=15    #s=int(input("Type size:"))
+    T = [None]*s
+
+    for x in range(s):
+        T[x] = [0] * s
     showBoard(T)
-    while allowableActions(T) != [] and not isTerminal(T):
+"""" while allowableActions(T) != [] and not isTerminal(T):
 	    T=p1(T)
 	    showBoard(T)
 	    if allowableActions(T) != [] and not isTerminal(T):
@@ -181,7 +176,7 @@ def Game(p1,p2):
     elif utility(T) == -1:
         print ('Player1 wins!')
     else:
-        print ('Draw!!!')
+        print ('Draw!!!')"""
 
 # ------------------------------------------------------------------
 # random player
@@ -210,30 +205,8 @@ def human_player(T):
 # main
 
 # max always wins? :
-#Game(maxPlays,randomPlayer)
+Game(maxPlays,randomPlayer)
 # that's a draw:
 #Game(maxPlays,minPlays)
-s = 15  # s=int(input("Type size:"))
-n = s ** 2
-T = [0] * n
-for x in range(4,8):
-    T[x]=1
-for x in range(128,len(T)-15,15):
-    T[x]=-1
-showBoard(T)
 
-print(utility(T))
 
-for x in range(15):
-    T[x]=[0]*15
-print (T)
-
-for x in range(15):
-    for i in T[x]:
-        if (i == 0):
-            print(".", end="\t")
-        elif (i == 1):
-            print("X", end="\t")
-        else:
-            print("O", end="\t")
-    print("\n")
