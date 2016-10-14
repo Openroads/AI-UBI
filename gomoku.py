@@ -14,6 +14,7 @@ def showBoard(T):
             else:
                 print("O", end="\t")
         print("\n")
+        #kurw
 
 # ------------------------------------------------------------------
 # given a state, returns the list of allowable actions
